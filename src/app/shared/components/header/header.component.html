@@ -11,45 +11,76 @@
 
       <!-- Navigation Links -->
       <div class="hidden md:flex items-center space-x-8">
-        <a routerLink="/campaigns" routerLinkActive="text-blue-600" class="text-gray-700 hover:text-blue-600 transition">
+        <a
+          routerLink="/campaigns"
+          routerLinkActive="text-blue-600"
+          class="text-gray-700 hover:text-blue-600 transition"
+        >
           Campaigns
         </a>
-        <a routerLink="/impact-stories" routerLinkActive="text-blue-600" class="text-gray-700 hover:text-blue-600 transition">
+        <a
+          routerLink="/impact-stories"
+          routerLinkActive="text-blue-600"
+          class="text-gray-700 hover:text-blue-600 transition"
+        >
           Impact Stories
         </a>
 
         @if (isAdmin()) {
-          <a routerLink="/admin/dashboard" routerLinkActive="text-blue-600" class="text-gray-700 hover:text-blue-600 transition">
-            Dashboard
-          </a>
-        }
-
-        @if (isDonor()) {
-          <a routerLink="/donor/donations" routerLinkActive="text-blue-600" class="text-gray-700 hover:text-blue-600 transition">
-            My Donations
-          </a>
+        <a
+          routerLink="/admin/dashboard"
+          routerLinkActive="text-blue-600"
+          class="text-gray-700 hover:text-blue-600 transition"
+        >
+          Dashboard
+        </a>
+        } @if (isDonor()) {
+        <a
+          routerLink="/donor/donations"
+          routerLinkActive="text-blue-600"
+          class="text-gray-700 hover:text-blue-600 transition"
+        >
+          My Donations
+        </a>
         }
       </div>
 
-      <!-- Auth Buttons -->
+      <!-- Auth Buttons/Profile -->
       <div class="flex items-center space-x-4">
         @if (isAuthenticated()) {
-          <div class="flex items-center space-x-3">
-            <span class="text-gray-700">{{ user()?.name }}</span>
-            <button 
-              (click)="logout()" 
-              class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition">
-              Logout
-            </button>
-          </div>
+        <div class="flex items-center space-x-3">
+          <!-- Profile Picture Link -->
+          <a routerLink="/profile" class="flex items-center group">
+            <img
+              [src]="
+                user()?.profilePicture ||
+                'https://ui-avatars.com/api/?name=' + (user()?.name || 'User')
+              "
+              alt="Profile"
+              class="w-10 h-10 rounded-full object-cover border-2 border-blue-300 group-hover:ring-2 group-hover:ring-blue-400 transition"
+            />
+          </a>
+          <span class="text-gray-700 font-medium">{{ user()?.name }}</span>
+          <button
+            (click)="logout()"
+            class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition"
+          >
+            Logout
+          </button>
+        </div>
         } @else {
-          <a routerLink="/login" class="text-gray-700 hover:text-blue-600 transition">
-            Login
-          </a>
-          <a routerLink="/register" 
-             class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
-            Register
-          </a>
+        <a
+          routerLink="/login"
+          class="text-gray-700 hover:text-blue-600 transition"
+        >
+          Login
+        </a>
+        <a
+          routerLink="/register"
+          class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition"
+        >
+          Register
+        </a>
         }
       </div>
     </div>

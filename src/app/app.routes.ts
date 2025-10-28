@@ -7,6 +7,11 @@ import { AdminDashboardComponent } from "./features/admin/dashboard/admin-dashbo
 import { Routes } from "@angular/router";
 import { authGuard } from "./core/guards/auth.guard";
 import { donorGuard, adminGuard } from "./core/guards/role.guard";
+import { DonationSuccessComponent } from "./features/donations/donation-success/donation-success.component";
+import { StoryListComponent } from "./features/impact-stories/story-list/story-list.component";
+import { StoryDetailComponent } from "./features/impact-stories/story-detail/story-detail.component";
+import { MyProfileComponent } from "./features/auth/my-profile/my-profile.component";
+import { CampaignFormComponent } from "./features/admin/campaign-form/campaign-form.component";
 
 export const routes: Routes = [
   { path: "", component: CampaignListComponent },
@@ -20,9 +25,48 @@ export const routes: Routes = [
     component: DonationHistoryComponent,
   },
   {
-    path: "admin/dashboard",
-    canActivate: [authGuard, adminGuard],
-    component: AdminDashboardComponent,
+    path: "impact-stories",
+    canActivate: [authGuard],
+    component: StoryListComponent,
   },
+  {
+    path: "impact-stories/:id",
+    canActivate: [authGuard],
+    component: StoryDetailComponent,
+  },
+  {
+    path: "donation-success",
+    canActivate: [authGuard, donorGuard],
+    component: DonationSuccessComponent,
+  },
+  {
+    path: "admin",
+    canActivate: [authGuard, adminGuard],
+    children: [
+      {
+        path: "dashboard",
+        component: AdminDashboardComponent,
+      },
+      {
+        path: "campaigns",
+        children: [
+          {
+            path: "new",
+            component: CampaignFormComponent,
+          },
+          {
+            path: ":id/edit",
+            component: CampaignFormComponent,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "profile",
+    canActivate: [authGuard],
+    component: MyProfileComponent,
+  },
+
   { path: "**", redirectTo: "" },
 ];

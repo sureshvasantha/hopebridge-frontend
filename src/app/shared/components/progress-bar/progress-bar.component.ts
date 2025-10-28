@@ -1,12 +1,12 @@
 // src/app/shared/components/progress-bar/progress-bar.component.ts
-import { Component, input, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, input, computed } from "@angular/core";
+import { CommonModule } from "@angular/common";
 
 @Component({
-  selector: 'app-progress-bar',
+  selector: "app-progress-bar",
   imports: [CommonModule],
   standalone: true,
-  templateUrl: './progress-bar.component.html'
+  templateUrl: "./progress-bar.component.html",
 })
 export class ProgressBarComponent {
   current = input.required<number>();
@@ -14,7 +14,7 @@ export class ProgressBarComponent {
 
   percentage = computed(() => {
     const pct = (this.current() / this.goal()) * 100;
-    return Math.min(Math.max(pct, 0), 100);
+    return Math.max(pct, 0);
   });
 
   percentageText = computed(() => {

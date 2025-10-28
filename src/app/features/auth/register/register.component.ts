@@ -2,46 +2,68 @@
 import { Component, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
-import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../../../core/services/auth.service";
 import { ToastService } from "../../../core/services/toast.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-register",
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: "./register.component.html",
 })
 export class RegisterComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
-  private router = inject(Router);
   private toastService = inject(ToastService);
+  private router = inject(Router);
 
   registerForm = this.fb.group({
-    name: ["", [Validators.required]],
+    name: ["", Validators.required],
     email: ["", [Validators.required, Validators.email]],
-    password: ["", [Validators.required, Validators.minLength(4)]],
-    role: ["DONOR", [Validators.required]],
+    password: ["", Validators.required],
+    role: ["", Validators.required],
+    profilePicture: this.fb.control<File | null>(null),
   });
 
-  onSubmit(): void {
-    if (this.registerForm.invalid) return;
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files?.length) {
+      this.registerForm.patchValue({ profilePicture: input.files[0] });
+    }
+  }
 
-    this.authService.register(this.registerForm.value as any).subscribe({
-      next: (response) => {
+  onSubmit(): void {
+    if (this.registerForm.invalid) {
+      this.toastService.error("Please fill all required fields correctly.");
+      return;
+    }
+
+    const formData = new FormData();
+
+    const { name, email, password, role } = this.registerForm.value;
+
+    const userObj = {
+      name,
+      email,
+      password,
+      role,
+    };
+
+    formData.append("user", JSON.stringify(userObj));
+
+    if (this.registerForm.value.profilePicture) {
+      formData.append("profilePicture", this.registerForm.value.profilePicture);
+    }
+
+    this.authService.registerWithFormData(formData).subscribe({
+      next: (user) => {
         this.toastService.success("Registration successful!");
-        const route =
-          response.user.roles[0].roleName === "ADMIN"
-            ? "/admin/dashboard"
-            : "/campaigns";
-        this.router.navigate([route]);
+        this.router.navigate(["/login"]);
       },
-      error: (error) => {
-        this.toastService.error(
-          "Registration failed. Email may already be in use."
-        );
-        console.error("Registration error:", error);
+      error: (err) => {
+        this.toastService.error("Registration failed. " + err.error.message);
+        console.error("Registration error:", err);
       },
     });
   }

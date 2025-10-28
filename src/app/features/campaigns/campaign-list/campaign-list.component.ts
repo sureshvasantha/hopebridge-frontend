@@ -6,6 +6,7 @@ import { CampaignService } from "../../../core/services/campaign.service";
 import { ToastService } from "../../../core/services/toast.service";
 import { CampaignCardComponent } from "../campaign-card/campaign-card.component";
 import { CampaignDTO, CampaignType } from "../../../core/models";
+import { AuthService } from "../../../core/services/auth.service";
 
 @Component({
   selector: "app-campaign-list",
@@ -15,6 +16,7 @@ import { CampaignDTO, CampaignType } from "../../../core/models";
 })
 export class CampaignListComponent implements OnInit {
   private campaignService = inject(CampaignService);
+  authService = inject(AuthService);
   private toastService = inject(ToastService);
 
   campaigns = this.campaignService.campaigns;
@@ -31,21 +33,35 @@ export class CampaignListComponent implements OnInit {
   }
 
   loadCampaigns(): void {
-    this.campaignService
-      .getAllCampaigns(
-        this.searchKeyword() || undefined,
-        this.selectedType() || undefined,
-        this.selectedLocation() || undefined
-      )
-      .subscribe({
+    const user = this.authService.currentUser();
+    if (user && user.role.roleName === "ADMIN") {
+      this.campaignService.getCampaignsByAdmin(user.userId).subscribe({
         next: () => {
-          console.log("Campaigns loaded successfully");
+          console.log("Admin campaigns loaded successfully");
         },
         error: (error) => {
-          this.toastService.error("Failed to load campaigns");
-          console.error("Error loading campaigns:", error);
+          this.toastService.error("Failed to load admin campaigns");
+          console.error("Error loading admin campaigns:", error);
         },
       });
+    } else {
+      // Load all campaigns with applied filters for normal user
+      this.campaignService
+        .getAllCampaigns(
+          this.searchKeyword() || undefined,
+          this.selectedType() || undefined,
+          this.selectedLocation() || undefined
+        )
+        .subscribe({
+          next: () => {
+            console.log("Campaigns loaded successfully");
+          },
+          error: (error) => {
+            this.toastService.error("Failed to load campaigns");
+            console.error("Error loading campaigns:", error);
+          },
+        });
+    }
   }
 
   onSearch(): void {

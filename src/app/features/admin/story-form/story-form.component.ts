@@ -1,17 +1,17 @@
 // src/app/features/admin/story-form/story-form.component.ts
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ImpactStoryService } from '../../../core/services/impact-story.service';
-import { AuthService } from '../../../core/services/auth.service';
-import { ToastService } from '../../../core/services/toast.service';
+import { Component, inject } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { ImpactStoryService } from "../../../core/services/impact-story.service";
+import { AuthService } from "../../../core/services/auth.service";
+import { ToastService } from "../../../core/services/toast.service";
 
 @Component({
-  selector: 'app-story-form',
+  selector: "app-story-form",
   imports: [CommonModule, ReactiveFormsModule],
   standalone: true,
-  templateUrl: './story-form.component.html'
+  templateUrl: "./story-form.component.html",
 })
 export class StoryFormComponent {
   private fb = inject(FormBuilder);
@@ -21,9 +21,9 @@ export class StoryFormComponent {
   private router = inject(Router);
 
   storyForm = this.fb.group({
-    title: ['', [Validators.required]],
-    content: ['', [Validators.required, Validators.minLength(100)]],
-    campaignId: [0, [Validators.required, Validators.min(1)]]
+    title: ["", [Validators.required]],
+    content: ["", [Validators.required, Validators.minLength(800)]],
+    campaignId: [0, [Validators.required, Validators.min(1)]],
   });
 
   onSubmit(): void {
@@ -36,18 +36,20 @@ export class StoryFormComponent {
     const request = {
       title: formValue.title!,
       content: formValue.content!,
-      campaignId: +formValue.campaignId!
+      campaignId: +formValue.campaignId!,
     };
 
-    this.storyService.createImpactStory(user.userId, request.campaignId, request).subscribe({
-      next: () => {
-        this.toastService.success('Impact story published!');
-        this.router.navigate(['/admin/dashboard']);
-      },
-      error: (error) => {
-        this.toastService.error('Failed to publish story');
-        console.error('Error:', error);
-      }
-    });
+    this.storyService
+      .createImpactStory(user.userId, request.campaignId, request)
+      .subscribe({
+        next: () => {
+          this.toastService.success("Impact story published!");
+          this.router.navigate(["/admin/dashboard"]);
+        },
+        error: (error) => {
+          this.toastService.error("Failed to publish story");
+          console.error("Error:", error);
+        },
+      });
   }
 }

@@ -1,0 +1,5 @@
+TODO: Create complete payment button in donation history or payments history
+TODO: Ensure each component shows correct and useful data to users
+TODO: Sanitise code
+
+TODO: In Profile pic, for Admin, Show no of campaigns, etc instead of donations 

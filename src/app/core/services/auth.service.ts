@@ -67,6 +67,9 @@ export class AuthService {
       })
     );
   }
+  registerWithFormData(formData: FormData): Observable<UserDTO> {
+    return this.apiService.postFormData<UserDTO>("/users/register", formData);
+  }
 
   logout(): void {
     this.currentUser.set(null);

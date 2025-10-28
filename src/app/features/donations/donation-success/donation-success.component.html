@@ -1,0 +1,27 @@
+<!-- src/app/features/donations/donation-success/donation-success.component.html -->
+<div class="min-h-screen flex flex-col justify-center items-center">
+  <!-- Loading Spinner -->
+  <div *ngIf="loading" class="mb-6">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    <p class="text-gray-700 mt-4">Verifying your payment, please wait...</p>
+  </div>
+
+  <!-- Success Message -->
+  <div *ngIf="success" class="text-green-600 text-xl font-bold mb-4">
+    Payment successful! Thank you for your donation.
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="text-red-600 text-lg mb-4">
+    {{ error }}
+  </div>
+
+  <!-- Navigation Button -->
+  <a
+    routerLink="/donor/donations"
+    class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+    *ngIf="success || error"
+  >
+    Go to My Donations
+  </a>
+</div>
