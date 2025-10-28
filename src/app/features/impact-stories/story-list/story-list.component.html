@@ -1,0 +1,39 @@
+<!-- src/app/features/impact-stories/story-list/story-list.component.html -->
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h1 class="text-4xl font-bold text-gray-900 mb-8">Impact Stories</h1>
+
+    @if (loading()) {
+      <div class="flex justify-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    } @else if (stories().length > 0) {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (story of stories(); track story.storyId) {
+          <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition">
+            @if (story.images && story.images.length > 0) {
+              <img 
+                [src]="story.images[0].imageUrl" 
+                [alt]="story.title"
+                class="w-full h-48 object-cover">
+            }
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-900 mb-2">{{ story.title }}</h3>
+              <p class="text-gray-600 text-sm mb-4 line-clamp-3">{{ story.content }}</p>
+              <a 
+                [routerLink]="['/impact-stories', story.storyId]"
+                class="text-blue-600 hover:underline font-medium">
+                Read More →
+              </a>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="text-center py-12 bg-white rounded-lg shadow-md">
+        <h3 class="text-lg font-medium text-gray-900">No impact stories yet</h3>
+        <p class="mt-1 text-gray-500">Check back soon for inspiring stories.</p>
+      </div>
+    }
+  </div>
+</div>

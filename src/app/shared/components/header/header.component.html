@@ -1,0 +1,57 @@
+<!-- src/app/shared/components/header/header.component.html -->
+<header class="bg-white shadow-sm sticky top-0 z-50">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo -->
+      <div class="flex items-center">
+        <a routerLink="/" class="flex items-center space-x-2">
+          <span class="text-2xl font-bold text-blue-600">HopeBridge</span>
+        </a>
+      </div>
+
+      <!-- Navigation Links -->
+      <div class="hidden md:flex items-center space-x-8">
+        <a routerLink="/campaigns" routerLinkActive="text-blue-600" class="text-gray-700 hover:text-blue-600 transition">
+          Campaigns
+        </a>
+        <a routerLink="/impact-stories" routerLinkActive="text-blue-600" class="text-gray-700 hover:text-blue-600 transition">
+          Impact Stories
+        </a>
+
+        @if (isAdmin()) {
+          <a routerLink="/admin/dashboard" routerLinkActive="text-blue-600" class="text-gray-700 hover:text-blue-600 transition">
+            Dashboard
+          </a>
+        }
+
+        @if (isDonor()) {
+          <a routerLink="/donor/donations" routerLinkActive="text-blue-600" class="text-gray-700 hover:text-blue-600 transition">
+            My Donations
+          </a>
+        }
+      </div>
+
+      <!-- Auth Buttons -->
+      <div class="flex items-center space-x-4">
+        @if (isAuthenticated()) {
+          <div class="flex items-center space-x-3">
+            <span class="text-gray-700">{{ user()?.name }}</span>
+            <button 
+              (click)="logout()" 
+              class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition">
+              Logout
+            </button>
+          </div>
+        } @else {
+          <a routerLink="/login" class="text-gray-700 hover:text-blue-600 transition">
+            Login
+          </a>
+          <a routerLink="/register" 
+             class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
+            Register
+          </a>
+        }
+      </div>
+    </div>
+  </nav>
+</header>

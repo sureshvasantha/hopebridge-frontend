@@ -1,0 +1,98 @@
+<!-- src/app/features/campaigns/campaign-detail/campaign-detail.component.html -->
+@if (loading()) {
+  <div class="flex justify-center items-center min-h-screen">
+    <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
+  </div>
+} @else if (campaign()) {
+  <div class="min-h-screen bg-gray-50">
+    <!-- Hero Section -->
+    <div class="relative h-96 bg-gray-900">
+      @if (campaign()!.images && campaign()!.images.length > 0) {
+        <img 
+          [src]="campaign()!.images[0].imageUrl" 
+          [alt]="campaign()!.title"
+          class="w-full h-full object-cover opacity-70">
+      }
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="text-center text-white px-4">
+          <h1 class="text-5xl font-bold mb-4">{{ campaign()!.title }}</h1>
+          <p class="text-xl">{{ campaign()!.location }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-8">
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">About This Campaign</h2>
+            <p class="text-gray-700 leading-relaxed whitespace-pre-line">{{ campaign()!.description }}</p>
+          </div>
+
+          <!-- Image Gallery -->
+          @if (campaign()!.images && campaign()!.images.length > 1) {
+            <div class="bg-white rounded-lg shadow-md p-6">
+              <h2 class="text-2xl font-bold text-gray-900 mb-4">Campaign Images</h2>
+              <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                @for (image of campaign()!.images; track image.imageId) {
+                  <img 
+                    [src]="image.imageUrl" 
+                    [alt]="image.description"
+                    class="w-full h-48 object-cover rounded-lg hover:opacity-75 transition">
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+          <div class="bg-white rounded-lg shadow-md p-6 sticky top-20">
+            <div class="mb-6">
+              <app-progress-bar 
+                [current]="campaign()!.collectedAmount" 
+                [goal]="campaign()!.goalAmount">
+              </app-progress-bar>
+            </div>
+
+            <div class="space-y-4 text-sm text-gray-600 mb-6">
+              <div class="flex justify-between">
+                <span>Type:</span>
+                <span class="font-semibold">{{ campaign()!.campaignType.replace('_', ' ') }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span>Status:</span>
+                <span [class]="campaign()!.status === 'ACTIVE' ? 'text-green-600 font-semibold' : 'text-gray-600 font-semibold'">
+                  {{ campaign()!.status }}
+                </span>
+              </div>
+              <div class="flex justify-between">
+                <span>Start Date:</span>
+                <span class="font-semibold">{{ campaign()!.startDate | date }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span>End Date:</span>
+                <span class="font-semibold">{{ campaign()!.endDate | date }}</span>
+              </div>
+            </div>
+
+            @if (campaign()!.status === 'ACTIVE') {
+              <button 
+                (click)="toggleDonationForm()"
+                class="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
+                {{ showDonationForm() ? 'Hide Donation Form' : 'Donate Now' }}
+              </button>
+            }
+
+            @if (showDonationForm()) {
+              <div class="mt-6">
+                <app-donation-form [campaignId]="campaign()!.campaignId"></app-donation-form>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

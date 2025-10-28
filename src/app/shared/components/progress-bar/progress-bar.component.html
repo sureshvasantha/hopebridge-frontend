@@ -1,0 +1,16 @@
+<!-- src/app/shared/components/progress-bar/progress-bar.component.html -->
+<div class="w-full">
+  <div class="flex justify-between mb-1 text-sm">
+    <span class="font-semibold text-gray-700">₹{{ current() | number }} raised</span>
+    <span class="text-gray-600">Goal: ₹{{ goal() | number }}</span>
+  </div>
+  <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+    <div 
+      class="bg-blue-600 h-3 rounded-full transition-all duration-300"
+      [style.width.%]="percentage()">
+    </div>
+  </div>
+  <div class="text-right text-xs text-gray-600 mt-1">
+    {{ percentageText() }}% completed
+  </div>
+</div>
