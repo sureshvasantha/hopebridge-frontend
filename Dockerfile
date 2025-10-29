@@ -4,11 +4,12 @@ FROM node:22-alpine AS build
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci
+COPY package.json ./
+RUN npm install
 
 COPY . .
-RUN npm run build --configuration production
+RUN npx ng build hopebridge-frontend --configuration production
+
 
 FROM httpd:2.4.65-trixie
 WORKDIR /usr/local/apache2/htdocs/
