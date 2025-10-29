@@ -54,6 +54,8 @@ export class CampaignDetailComponent implements OnInit {
     if (!id) return;
 
     const campaignId = +id;
+    this.newStory.campaignId = campaignId;
+
     const user = this.authService.currentUser();
 
     if (user?.role?.roleName === "ADMIN") {
@@ -141,7 +143,6 @@ export class CampaignDetailComponent implements OnInit {
       this.submitting.set(false);
       return;
     }
-
     this.impactStoryService
       .createImpactStory(user.userId, this.newStory.campaignId, this.newStory)
       .subscribe({

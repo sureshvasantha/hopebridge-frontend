@@ -17,6 +17,7 @@ export class DonationFormComponent {
   private donationService = inject(DonationService);
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
+  
 
   campaignId = input.required<number>();
 
@@ -36,6 +37,7 @@ export class DonationFormComponent {
     const user = this.authService.currentUser();
     if (!user) {
       this.toastService.error("Please login to donate");
+
       return;
     }
 

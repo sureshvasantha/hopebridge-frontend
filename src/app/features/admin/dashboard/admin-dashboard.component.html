@@ -133,7 +133,10 @@
                 Complete
               </button>
               <button
-                *ngIf="campaign.status === 'ACTIVE'"
+                *ngIf="
+                  campaign.status === 'ACTIVE' &&
+                  campaign.collectedAmount < campaign.goalAmount
+                "
                 (click)="openStopModal(campaign)"
                 class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition"
               >
