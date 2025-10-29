@@ -16,17 +16,9 @@ WORKDIR /usr/local/apache2/htdocs/
 
 COPY --from=build /app/dist/hopebridge-frontend/* .
 
+# Copy custom Apache config for SPA routing
+COPY apache-angular.conf /usr/local/apache2/conf/httpd.conf
+
 EXPOSE 80
 
-#  Stage 2: Serve with Nginx
-# FROM nginx:1.29-alpine3.22
-
-# # Copy Angular dist to Nginx html directory
-# COPY --from=build /usr/src/app/dist/hopebridge-frontend/* /usr/share/nginx/html/
-
-# # Copy custom Nginx config (optional)
-# # COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# EXPOSE 80
-
-# CMD ["nginx", "-g", "daemon off;"]
+CMD ["httpd-foreground"]
